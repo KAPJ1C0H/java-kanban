@@ -11,13 +11,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-
-        history.remove(task);
-
-        history.add(task);
-
+        history.add(task.copy()); // Добавляем копию задачи в историю
         if (history.size() > 10) {
-            history.remove(0);
+            history.remove(0); // Удаляем самую старую версию, если больше 10
         }
     }
 
