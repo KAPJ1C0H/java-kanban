@@ -4,18 +4,19 @@ import java.util.Objects;
 
 public class Task {
 
-    private String name;         // Изменено на private
-    private String description;  // Изменено на private
-    private Status status;       // Изменено на private
-    private int id;             // Изменено на private
+    private String name;
+    private String description;
+    private Status status;
+    private int id;
 
     public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
     }
-
-    // Геттеры
+    public Task copy() {
+        return new Task(this.name, this.description, this.status);
+    }
     public String getName() {
         return name;
     }
@@ -53,10 +54,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id &&
-                Objects.equals(name, task.name) &&
-                Objects.equals(description, task.description) &&
-                Objects.equals(status, task.status);
+        return id == task.id; // Сравниваем только по ID
     }
 
     @Override
@@ -73,4 +71,5 @@ public class Task {
                 ", id=" + id +
                 '}';
     }
+
 }
