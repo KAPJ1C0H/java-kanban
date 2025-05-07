@@ -47,10 +47,10 @@ public class Epic extends Task {
     public String toString() {
         return "com.yandex.app.model.Epic{" +
                 "subtaskId=" + subtaskId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                ", id=" + id +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status='" + getStatus() + '\'' +
+                ", id=" + getId() +
                 '}';
     }
 }

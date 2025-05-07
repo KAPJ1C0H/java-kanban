@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class Task {
 
-    protected String name;
-    protected String description;
-    protected Status status;
-    protected int id;
+    private String name;         // Изменено на private
+    private String description;  // Изменено на private
+    private Status status;       // Изменено на private
+    private int id;             // Изменено на private
 
     public Task(String name, String description, Status status) {
         this.name = name;
@@ -15,6 +15,7 @@ public class Task {
         this.status = status;
     }
 
+    // Геттеры
     public String getName() {
         return name;
     }
@@ -47,13 +48,15 @@ public class Task {
         this.id = id;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description) && Objects.equals(status, task.status);
+        return id == task.id &&
+                Objects.equals(name, task.name) &&
+                Objects.equals(description, task.description) &&
+                Objects.equals(status, task.status);
     }
 
     @Override

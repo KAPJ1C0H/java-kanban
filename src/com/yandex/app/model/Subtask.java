@@ -39,10 +39,10 @@ public class Subtask extends Task {
     public String toString() {
         return "com.yandex.app.model.Subtask{" +
                 "epicId=" + epicId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                ", id=" + id +
+                ", name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status='" + getStatus() + '\'' +
+                ", id=" + getId() +
                 '}';
     }
 }
