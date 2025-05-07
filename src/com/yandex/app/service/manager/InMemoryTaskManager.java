@@ -92,16 +92,22 @@ public class InMemoryTaskManager implements TaskManager {
     public Integer addNewSubtask(Subtask subtask) {
         final int id = getNewId();
         Epic epic = epics.get(subtask.getEpicId());
+
+        // Проверка на добавление эпика в качестве подзадачи
+        if (epic != null && epic.getId() == subtask.getId()) {
+            throw new IllegalArgumentException("Эпик не может быть подзадачей самого себя.");
+        }
+
         if (epic == null) {
             System.out.println("Такой важной задачи нет");
             return -1;
         }
+
         subtask.setId(id);
         epic.addSubtask(subtask);
         subtasks.put(id, subtask);
         updateEpicStatus(subtask.getEpicId());
         return id;
-
     }
 
     @Override
