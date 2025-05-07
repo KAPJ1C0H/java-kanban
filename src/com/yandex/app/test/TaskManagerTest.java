@@ -1,8 +1,10 @@
-package com.yandex.app.service.manager;
+package com.yandex.app.test;
 
 import com.yandex.app.model.Status;
 import com.yandex.app.model.Task;
 import com.yandex.app.service.history.HistoryManager;
+import com.yandex.app.service.manager.Managers;
+import com.yandex.app.service.manager.TaskManager;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
