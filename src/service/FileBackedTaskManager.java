@@ -97,6 +97,28 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
+    private static Task fromString(String value) {
+        Task task = new Task();
+        String[] taskSplit = value.split(",");
+
+        switch (TaskType.valueOf(taskSplit[1])) {
+            case TaskType.TASK:
+                task = new Task(taskSplit[2], taskSplit[4], Status.valueOf(taskSplit[3]));
+                task.setId(Integer.parseInt(taskSplit[0]));
+                return task;
+            case TaskType.SUBTASK:
+                task = new Subtask(taskSplit[2], taskSplit[4], Status.valueOf(taskSplit[3]),
+                        Integer.parseInt(taskSplit[5]));
+                task.setId(Integer.parseInt(taskSplit[0]));
+                return task;
+            case TaskType.EPIC:
+                task = new Epic(taskSplit[2], taskSplit[4], Status.valueOf(taskSplit[3]));
+                task.setId(Integer.parseInt(taskSplit[0]));
+                return task;
+        }
+        return task;
+    }
+
     private void save() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(backFile, StandardCharsets.UTF_8))) {
             writer.write(HEADER);
@@ -154,27 +176,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             sb.append(subtask.getEpicId());
         }
         return sb.toString();
-    }
-
-    private static Task fromString(String value) {
-        Task task = new Task();
-        String[] taskSplit = value.split(",");
-
-        switch (TaskType.valueOf(taskSplit[1])) {
-            case TaskType.TASK:
-                task = new Task(taskSplit[2], taskSplit[4], Status.valueOf(taskSplit[3]));
-                task.setId(Integer.parseInt(taskSplit[0]));
-                return task;
-            case TaskType.SUBTASK:
-                task = new Subtask(taskSplit[2], taskSplit[4], Status.valueOf(taskSplit[3]),
-                        Integer.parseInt(taskSplit[5]));
-                task.setId(Integer.parseInt(taskSplit[0]));
-                return task;
-            case TaskType.EPIC:
-                task = new Epic(taskSplit[2], taskSplit[4], Status.valueOf(taskSplit[3]));
-                task.setId(Integer.parseInt(taskSplit[0]));
-                return task;
-        }
-        return task;
     }
 }
