@@ -25,16 +25,6 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
-    protected boolean searchIsOverlappedTask(Task task) {
-        return getPrioritizedTasks().stream()
-                .noneMatch(priorityTask -> isOverlapped(task, priorityTask));
-    }
-
-    protected boolean isOverlapped(Task task, Task priorityTask) {
-        return priorityTask.getEndTime().isAfter(task.getStartTime())
-                && task.getEndTime().isAfter(priorityTask.getStartTime());
-    }
-
     @Override
     public List<Task> getHistory() {
         return new ArrayList<>(historyManager.getHistory());
@@ -83,54 +73,6 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setId(generatedId);
         epics.put(epic.getId(), epic);
         generatedId++;
-    }
-
-    protected void setTimeEpic(Epic epic) {
-        if (!epic.getSubtaskListId().isEmpty()) {
-
-            Optional<LocalDateTime> starTime = epic.getSubtaskListId().stream()
-                    .map(subtasks::get)
-                    .filter(subtask -> subtask.getStartTime() != null)
-                    .min(Comparator.comparing(Task::getStartTime))
-                    .map(Task::getStartTime);
-
-            Optional<LocalDateTime> endTime = epic.getSubtaskListId().stream()
-                    .map(subtasks::get)
-                    .filter(subtask -> subtask.getStartTime() != null)
-                    .max(Comparator.comparing(Task::getEndTime))
-                    .map(Task::getEndTime);
-
-            if (starTime.isPresent() && endTime.isPresent()) {
-                Duration duration = Duration.between(starTime.get(), endTime.get());
-                epic.setDuration(duration);
-            }
-            starTime.ifPresent(epic::setStartTime);
-            endTime.ifPresent(epic::setEndTime);
-        } else {
-            epic.setStartTime(null);
-            epic.setEndTime(null);
-            epic.setDuration(Duration.ZERO);
-        }
-    }
-
-    protected void checkStatus(Epic epic) {
-        boolean statusNew = epic.getSubtaskListId().stream()
-                .map(subtasks::get)
-                .anyMatch(subtask -> subtask.getStatus() == Status.NEW);
-        boolean statusInProgress = epic.getSubtaskListId().stream()
-                .map(subtasks::get)
-                .anyMatch(subtask -> subtask.getStatus() == Status.IN_PROGRESS);
-        boolean statusDone = epic.getSubtaskListId().stream()
-                .map(subtasks::get)
-                .anyMatch(subtask -> subtask.getStatus() == Status.DONE);
-
-        if (statusNew && !statusInProgress && !statusDone) {
-            epic.setStatus(Status.NEW);
-        } else if (statusDone && !statusInProgress && !statusNew) {
-            epic.setStatus(Status.DONE);
-        } else {
-            epic.setStatus(Status.IN_PROGRESS);
-        }
     }
 
     @Override
@@ -276,5 +218,63 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public ArrayList<Epic> getAllEpics() {
         return new ArrayList<>(epics.values());
+    }
+
+    private boolean searchIsOverlappedTask(Task task) {
+        return getPrioritizedTasks().stream()
+                .noneMatch(priorityTask -> isOverlapped(task, priorityTask));
+    }
+
+    private boolean isOverlapped(Task task, Task priorityTask) {
+        return priorityTask.getEndTime().isAfter(task.getStartTime())
+                && task.getEndTime().isAfter(priorityTask.getStartTime());
+    }
+
+    private void setTimeEpic(Epic epic) {
+        if (!epic.getSubtaskListId().isEmpty()) {
+
+            Optional<LocalDateTime> starTime = epic.getSubtaskListId().stream()
+                    .map(subtasks::get)
+                    .filter(subtask -> subtask.getStartTime() != null)
+                    .min(Comparator.comparing(Task::getStartTime))
+                    .map(Task::getStartTime);
+
+            Optional<LocalDateTime> endTime = epic.getSubtaskListId().stream()
+                    .map(subtasks::get)
+                    .filter(subtask -> subtask.getStartTime() != null)
+                    .max(Comparator.comparing(Task::getEndTime))
+                    .map(Task::getEndTime);
+
+            if (starTime.isPresent() && endTime.isPresent()) {
+                Duration duration = Duration.between(starTime.get(), endTime.get());
+                epic.setDuration(duration);
+            }
+            starTime.ifPresent(epic::setStartTime);
+            endTime.ifPresent(epic::setEndTime);
+        } else {
+            epic.setStartTime(null);
+            epic.setEndTime(null);
+            epic.setDuration(Duration.ZERO);
+        }
+    }
+
+    private void checkStatus(Epic epic) {
+        boolean statusNew = epic.getSubtaskListId().stream()
+                .map(subtasks::get)
+                .anyMatch(subtask -> subtask.getStatus() == Status.NEW);
+        boolean statusInProgress = epic.getSubtaskListId().stream()
+                .map(subtasks::get)
+                .anyMatch(subtask -> subtask.getStatus() == Status.IN_PROGRESS);
+        boolean statusDone = epic.getSubtaskListId().stream()
+                .map(subtasks::get)
+                .anyMatch(subtask -> subtask.getStatus() == Status.DONE);
+
+        if (statusNew && !statusInProgress && !statusDone) {
+            epic.setStatus(Status.NEW);
+        } else if (statusDone && !statusInProgress && !statusNew) {
+            epic.setStatus(Status.DONE);
+        } else {
+            epic.setStatus(Status.IN_PROGRESS);
+        }
     }
 }
