@@ -220,6 +220,10 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(epics.values());
     }
 
+    public void updateEpicTiming(Epic epic) {
+        setTimeEpic(epic); 
+    }
+
     private boolean searchIsOverlappedTask(Task task) {
         return getPrioritizedTasks().stream()
                 .noneMatch(priorityTask -> isOverlapped(task, priorityTask));
