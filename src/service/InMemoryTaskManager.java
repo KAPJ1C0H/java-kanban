@@ -221,7 +221,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     public void updateEpicTiming(Epic epic) {
-        setTimeEpic(epic); 
+        setTimeEpic(epic);
     }
 
     private boolean searchIsOverlappedTask(Task task) {
